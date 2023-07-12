@@ -10,7 +10,7 @@ export class UserImplementationRepositoryMapper extends Mapper<
       firstName: param.firstName,
       lastName: param.lastName,
       documentType: param.documentType,
-      documentNumer: param.documentNumber,
+      documentNumber: param.documentNumber,
       gender: param.gender,
     };
   }
@@ -19,7 +19,7 @@ export class UserImplementationRepositoryMapper extends Mapper<
       firstName: param.firstName,
       lastName: param.lastName,
       documentType: param.documentType,
-      documentNumber: param.documentNumer,
+      documentNumber: param.documentNumber,
       gender: param.gender,
     };
   }

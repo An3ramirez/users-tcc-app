@@ -1,7 +1,13 @@
-import { Component } from '@angular/core';
-import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
+import { UserModel } from 'src/app/domain/models/user.model';
 import { UserCreateUseCase } from 'src/app/domain/usecases/user-create.usecase';
+
+interface subTypesI {
+  id: string;
+  name: string;
+}
 
 @Component({
   selector: 'app-user-form',
@@ -9,37 +15,57 @@ import { UserCreateUseCase } from 'src/app/domain/usecases/user-create.usecase';
   styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent {
-  form: FormGroup;
+  @Input() userEdit?: UserModel;
+  @Output() submitForm = new EventEmitter();
 
-  constructor(private userCreateUseCase: UserCreateUseCase) {
-    this.form = new FormGroup({
-      firstname: new FormControl('', [Validators.required]),
-      lastname: new FormControl('', [Validators.required]),
-      documentType: new FormControl('', [Validators.required]),
-      documentNumber: new FormControl(''),
-      gender: new FormControl(''),
+  userForm: FormGroup;
+  documentTypes: subTypesI[] = [
+    {
+      id: '1',
+      name: 'Cedula',
+    },
+    {
+      id: '2',
+      name: 'Passaporte',
+    },
+  ];
+  genders: subTypesI[] = [
+    {
+      id: '1',
+      name: 'Mujer',
+    },
+    {
+      id: '2',
+      name: 'Hombre',
+    },
+  ];
+
+  constructor(private fb: FormBuilder) {
+    this.userForm = this.fb.group({
+      firstName: [this.userEdit?.firstName || '', Validators.required],
+      lastName: [this.userEdit?.lastName || '', Validators.required],
+      documentType: [this.userEdit?.documentType || '', Validators.required],
+      documentNumber: [
+        this.userEdit?.documentNumber || '',
+        Validators.required,
+      ],
+      gender: [this.userEdit?.gender || '', Validators.required],
     });
   }
 
   ngOnInit(): void {}
 
-  guardarElemento(): void {
-    console.log(
-      '🚀 ~ file: user-form.component.ts:39 ~ UserFormComponent ~ guardarElemento ~ UserEntity:'
-    );
-    const data: UserEntity = {
-      firstName: 'andres',
-      lastName: '',
-      documentType: '',
-      documentNumber: 12323,
-      gender: '',
-    };
-    this.userCreateUseCase
-      .execute(data)
-      .subscribe((resul) => console.log('Result: ', resul));
+  onSubmitForm(): void {
+    if (this.userForm.invalid) {
+      return;
+    }
+
+    console.log('🚀 ~ send form');
+    this.submitForm.emit(this.userForm.value);
   }
 
-  editarElemento(): void {
-    // Aquí puedes implementar la lógica para editar el elemento
+  showError(inputNane: string) {
+    const { pristine, errors, touched } = this.userForm.controls[inputNane];
+    return !pristine && errors && touched;
   }
 }

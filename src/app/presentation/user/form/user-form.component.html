@@ -1,41 +1,43 @@
 <div class="container p-4">
-  <form [formGroup]="form" (ngSubmit)="guardarElemento()">
+  <form [formGroup]="userForm" (ngSubmit)="onSubmitForm()">
     <div class="form-floating mb-3">
       <input
         type="text"
         class="form-control"
-        id="firstname"
-        formControlName="firstname"
+        [ngClass]="{ 'is-invalid': showError('firstName') }"
+        id="firstName"
+        formControlName="firstName"
         placeholder="Nombres"
       />
-      <label for="firstname">Nombres</label>
+      <label for="firstName">Nombres</label>
+      <div class="invalid-feedback">Los nombres son obligatorios</div>
     </div>
     <div class="form-floating mb-3">
       <input
         type="text"
         class="form-control"
-        id="lastname"
-        formControlName="lastname"
+        id="lastName"
+        formControlName="lastName"
         placeholder="Apellidos"
       />
-      <label for="lastname">Apellidos</label>
+      <label for="lastName">Apellidos</label>
     </div>
     <div class="form-floating mb-3">
       <select
         class="form-select"
-        id="floatingSelect"
+        id="doucmentType"
         aria-label="Floating label select example"
         formControlName="documentType"
       >
-        <option value="1">One</option>
-        <option value="2">Two</option>
-        <option value="3">Three</option>
+        <option [value]="document.id" *ngFor="let document of documentTypes">
+          {{ document.name }}
+        </option>
       </select>
-      <label for="floatingSelect">Tipo de documento</label>
+      <label for="documentType">Tipo de documento</label>
     </div>
     <div class="form-floating mb-3">
       <input
-        type="text"
+        type="number"
         class="form-control"
         id="documentNumber"
         formControlName="documentNumber"
@@ -44,16 +46,22 @@
       <label for="documentNumber">Numero documento</label>
     </div>
     <div class="form-floating mb-3">
-      <input
-        type="text"
-        class="form-control"
-        id="gender"
+      <select
+        id="genderInput"
+        class="form-select"
+        aria-label="Selecione genero"
         formControlName="gender"
-        placeholder="Genero"
-      />
-      <label for="gender">Genero</label>
+      >
+        <option [value]="item.id" *ngFor="let item of genders">
+          {{ item.name }}
+        </option>
+      </select>
+      <label for="genderInput">Genero</label>
     </div>
-
-    <button type="submit" class="btn btn-primary">Crear</button>
+    <div class="d-flex justify-content-end">
+      <button type="submit" class="btn btn-primary">
+        {{ userEdit ? "Editar" : "Crear" }}
+      </button>
+    </div>
   </form>
 </div>

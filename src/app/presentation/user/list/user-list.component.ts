@@ -1,4 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { UserModel } from 'src/app/domain/models/user.model';
+import { ConfirmationModalComponent } from 'src/app/presentation/shared/confirmation-modal/confirmation-modal.component';
 
 @Component({
   selector: 'app-user-list',
@@ -6,9 +9,36 @@ import { Component } from '@angular/core';
   styleUrls: ['./user-list.component.scss'],
 })
 export class UserListComponent {
-  constructor() {}
+  @Output() onDeleteEvent = new EventEmitter<number>();
+  @Output() onEditEvent = new EventEmitter<number>();
+  @Output() onCreateEvent = new EventEmitter<number>();
 
-  ngOnInit(): void {
-    // Aquí puedes cargar la lista de elementos desde una API o cualquier otra fuente de datos
+  @Input() users: UserModel[] = [];
+  @Input() loaderEdit: boolean = false;
+  @Input() loaderDelete: boolean = false;
+  @Input() loaderCreate: boolean = false;
+
+  bsModalRef?: BsModalRef;
+
+  constructor(private modalService: BsModalService) {}
+
+  ngOnInit(): void {}
+
+  onDelete(id: number) {
+    this.bsModalRef = this.modalService.show(ConfirmationModalComponent, {
+      initialState: {
+        message: '¿Estás seguro de eliminar el usuario?',
+      },
+    });
+
+    this.bsModalRef.content.onClose.subscribe((confirmed: boolean) => {
+      if (confirmed) {
+        this.onDeleteEvent.emit(id);
+      }
+    });
+  }
+
+  onEdit(id: number) {
+    this.onEditEvent.emit(id);
   }
 }

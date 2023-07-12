@@ -1,0 +1,20 @@
+<div class="modal-header">
+  <h4 class="modal-title">Confirmación</h4>
+  <button
+    type="button"
+    class="btn-close"
+    (click)="close()"
+    aria-label="Close"
+  ></button>
+</div>
+<div class="modal-body">
+  {{ message }}
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="confirm(false)">
+    Cancelar
+  </button>
+  <button type="button" class="btn btn-primary" (click)="confirm(true)">
+    Aceptar
+  </button>
+</div>

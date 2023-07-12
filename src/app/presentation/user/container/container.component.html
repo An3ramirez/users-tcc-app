@@ -1,0 +1,40 @@
+<app-user-list
+  (onDeleteEvent)="deteUser($event)"
+  (onEditEvent)="setEditUser($event)"
+  (onCreateEvent)="formModalRef.show()"
+  [users]="users"
+  [loaderCreate]="loader.create"
+  [loaderEdit]="loader.edit"
+  [loaderDelete]="loader.delete"
+></app-user-list>
+
+<!-- Modals -->
+<div
+  class="modal fade"
+  id="formModal"
+  data-bs-backdrop="static"
+  data-bs-keyboard="false"
+  tabindex="-1"
+  aria-labelledby="formModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="formModalLabel">Nuevo usuario</h1>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <app-user-form
+          [userEdit]="userEdit"
+          (submitForm)="savedForm($event)"
+        ></app-user-form>
+      </div>
+    </div>
+  </div>
+</div>
