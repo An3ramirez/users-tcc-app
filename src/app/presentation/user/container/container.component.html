@@ -1,7 +1,7 @@
 <app-user-list
   (onDeleteEvent)="deteUser($event)"
   (onEditEvent)="setEditUser($event)"
-  (onCreateEvent)="formModalRef.show()"
+  (onCreateEvent)="setCreateUser()"
   [users]="users"
   [loaderCreate]="loader.create"
   [loaderEdit]="loader.edit"
@@ -21,7 +21,9 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h1 class="modal-title fs-5" id="formModalLabel">Nuevo usuario</h1>
+        <h1 class="modal-title fs-5" id="formModalLabel">
+          {{ userEdit ? "Editar usuario" : "Nuevo usuario" }}
+        </h1>
         <button
           type="button"
           class="btn-close"

@@ -1,15 +1,15 @@
 import { Observable } from 'rxjs';
-import { UseCase } from 'src/app/base/use-case';
+import { UseCaseEdit } from 'src/app/base/use-case';
 import { UserRepository } from '../repositories/user.repository';
 import { UserModel } from '../models/user.model';
 import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
 import { Injectable, inject } from '@angular/core';
 
 @Injectable()
-export class UserEditUseCase implements UseCase<UserEntity, UserModel> {
+export class UserEditUseCase implements UseCaseEdit<UserEntity, UserModel> {
   constructor(private userRepository: UserRepository) {}
 
-  execute(params: UserEntity): Observable<UserModel> {
-    return this.userRepository.edit(params);
+  execute(id: number, params: UserEntity): Observable<UserModel> {
+    return this.userRepository.edit(id, params);
   }
 }

@@ -1,7 +1,7 @@
 export interface UserEntity {
   firstName: string;
   lastName: string;
-  documentType: string;
+  documentType: number;
   documentNumber: number;
-  gender: string;
+  gender: number;
 }

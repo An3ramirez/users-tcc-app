@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { UserModel } from 'src/app/domain/models/user.model';
-import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
 import { ToastrService } from 'ngx-toastr';
 import { UserImplementationRepositoryMapper } from 'src/app/data/repositories/user/mappers/user-repository.mapper';
 import {
   UserDeleteUseCase,
-  UserAllUseCase,
+  UserFindAllUseCase,
   UserCreateUseCase,
   UserEditUseCase,
 } from 'src/app/domain/usecases';
@@ -31,7 +30,7 @@ export class ContainerComponent {
 
   constructor(
     private toastr: ToastrService,
-    private userAllUseCase: UserAllUseCase,
+    private userFindAllUseCase: UserFindAllUseCase,
     private userCreateUseCase: UserCreateUseCase,
     private userEditUseCase: UserEditUseCase,
     private userDeleteUseCase: UserDeleteUseCase
@@ -45,13 +44,9 @@ export class ContainerComponent {
   }
 
   getUsers() {
-    this.userAllUseCase.execute().subscribe({
+    this.userFindAllUseCase.execute().subscribe({
       next: (result) => {
         this.users = result;
-        console.log(
-          '🚀 ~ file: container.component.ts:50 ~ ContainerComponent ~ this.userAllUseCase.execute ~ result:',
-          result
-        );
       },
       error: (error) => {
         console.log(
@@ -64,6 +59,7 @@ export class ContainerComponent {
 
   savedForm(user: UserModel) {
     console.log('saved form: ', user);
+
     this.formModalRef.hide();
     if (!!this.userEdit) {
       this.handleUpdateUser(user);
@@ -77,11 +73,12 @@ export class ContainerComponent {
     const newUser = this.userMapper.mapTo(user);
 
     this.userCreateUseCase.execute(newUser).subscribe({
-      next: (value) => {
-        console.log('response: ', value);
+      next: (response) => {
+        this.users = [...this.users, response];
       },
       error: (error) => {
         console.log('error');
+        this.loader.create = false;
       },
       complete: () => {
         this.loader.create = false;
@@ -92,13 +89,20 @@ export class ContainerComponent {
   handleUpdateUser(user: UserModel) {
     this.loader.edit = true;
     const newUser = this.userMapper.mapTo(user);
+    let id = this.userEdit?.id || 0;
+    this.userEdit = undefined;
 
-    this.userEditUseCase.execute(newUser).subscribe({
-      next: (value) => {
-        console.log('response');
+    this.userEditUseCase.execute(id, newUser).subscribe({
+      next: (response) => {
+        const index = this.users.findIndex((user) => user.id === response.id);
+
+        if (index !== -1) {
+          this.users[index] = response;
+        }
       },
       error: (error) => {
         console.log('error');
+        this.loader.edit = false;
       },
       complete: () => {
         console.log('Complete');
@@ -107,8 +111,31 @@ export class ContainerComponent {
     });
   }
 
+  deteUser(id: number) {
+    this.loader.delete = true;
+    this.userDeleteUseCase.execute(id).subscribe({
+      next: (value) => {
+        console.log('response');
+        this.toastr.success('Exito!', 'El usuario fue eliminado correctamente');
+      },
+      error: (error) => {
+        this.toastr.error('Error inesperado');
+        this.loader.delete = false;
+      },
+      complete: () => {
+        const indice = this.users.findIndex((user) => user.id === id);
+
+        if (indice !== -1) {
+          this.users.splice(indice, 1);
+        }
+        this.loader.delete = false;
+      },
+    });
+  }
+
   setEditUser(id: number) {
     this.userEdit = this.users.find((user) => user.id == id);
+
     if (this.userEdit) {
       this.formModalRef.show();
     } else {
@@ -120,20 +147,9 @@ export class ContainerComponent {
     }
   }
 
-  deteUser(id: number) {
-    this.loader.delete = true;
-    this.userDeleteUseCase.execute(id).subscribe({
-      next: (value) => {
-        console.log('response');
-        this.toastr.success('Exito!', 'El usuario fue eliminado correctamente');
-      },
-      error: (error) => {
-        console.log('error');
-      },
-      complete: () => {
-        console.log('Complete');
-        this.loader.delete = false;
-      },
-    });
+  setCreateUser() {
+    this.userEdit = undefined;
+    console.log('create open modal', this.userEdit);
+    this.formModalRef.show();
   }
 }

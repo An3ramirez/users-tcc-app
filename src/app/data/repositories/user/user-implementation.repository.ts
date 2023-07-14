@@ -20,21 +20,18 @@ export class UserImplementationRepository extends UserRepository {
     super();
   }
   create(params: UserEntity): Observable<UserModel> {
-    return of(this.userMapper.mapFrom(params)).pipe(delay(2000));
-    /* return this.http
-      .post<UserEntity>('https://example.com/login', params)
-      .pipe(map(this.userMapper.mapFrom)); */
+    return this.http.post<UserEntity>(this.domainApi + '/user', params);
   }
 
-  all(): Observable<UserModel[]> {
-    return this.http.get<UserModel[]>('assets/users.json');
+  findAll(): Observable<UserModel[]> {
+    return this.http.get<UserModel[]>(this.domainApi + '/user');
   }
 
-  edit(params: UserEntity): Observable<UserModel> {
-    return of().pipe(delay(2000));
+  edit(id: number, params: UserEntity): Observable<UserModel> {
+    return this.http.put<UserModel>(this.domainApi + '/user/' + id, params);
   }
 
-  delete(id: number): Observable<UserModel> {
-    return of().pipe(delay(2000));
+  delete(id: number): Observable<void> {
+    return this.http.delete<void>(this.domainApi + '/user/' + id);
   }
 }

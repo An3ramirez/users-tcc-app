@@ -1,11 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
 import { UserModel } from 'src/app/domain/models/user.model';
-import { UserCreateUseCase } from 'src/app/domain/usecases/user-create.usecase';
 
 interface subTypesI {
-  id: string;
+  id: number;
   name: string;
 }
 
@@ -21,47 +19,54 @@ export class UserFormComponent {
   userForm: FormGroup;
   documentTypes: subTypesI[] = [
     {
-      id: '1',
+      id: 1,
       name: 'Cedula',
     },
     {
-      id: '2',
+      id: 2,
       name: 'Passaporte',
     },
   ];
   genders: subTypesI[] = [
     {
-      id: '1',
+      id: 1,
       name: 'Mujer',
     },
     {
-      id: '2',
+      id: 2,
       name: 'Hombre',
     },
   ];
 
   constructor(private fb: FormBuilder) {
     this.userForm = this.fb.group({
-      firstName: [this.userEdit?.firstName || '', Validators.required],
-      lastName: [this.userEdit?.lastName || '', Validators.required],
-      documentType: [this.userEdit?.documentType || '', Validators.required],
-      documentNumber: [
-        this.userEdit?.documentNumber || '',
-        Validators.required,
-      ],
-      gender: [this.userEdit?.gender || '', Validators.required],
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      documentType: [null, Validators.required],
+      documentNumber: [null, Validators.required],
+      gender: [null, Validators.required],
     });
   }
 
-  ngOnInit(): void {}
+  ngOnChanges() {
+    console.log('onChangess');
+    if (!!this.userEdit) {
+      this.userForm.patchValue(this.userEdit);
+    } else {
+      this.userForm.reset();
+    }
+  }
 
   onSubmitForm(): void {
     if (this.userForm.invalid) {
       return;
     }
+    const user = this.userForm.value;
+    user.documentType = parseInt(user.documentType);
+    user.gender = parseInt(user.gender);
 
-    console.log('🚀 ~ send form');
-    this.submitForm.emit(this.userForm.value);
+    this.submitForm.emit(user);
+    this.userForm.reset();
   }
 
   showError(inputNane: string) {

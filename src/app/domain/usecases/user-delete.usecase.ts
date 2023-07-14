@@ -5,10 +5,10 @@ import { UserModel } from '../models/user.model';
 import { Injectable, inject } from '@angular/core';
 
 @Injectable()
-export class UserDeleteUseCase implements UseCaseId<number, UserModel> {
+export class UserDeleteUseCase implements UseCaseId<number, void> {
   constructor(private userRepository: UserRepository) {}
 
-  execute(id: number): Observable<UserModel> {
+  execute(id: number): Observable<void> {
     return this.userRepository.delete(id);
   }
 }
