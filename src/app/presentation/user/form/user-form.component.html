@@ -27,7 +27,7 @@
         class="form-select"
         id="doucmentType"
         aria-label="Floating label select example"
-        formControlName="documentType"
+        formControlName="documentTypeId"
       >
         <option [value]="document.id" *ngFor="let document of documentTypes">
           {{ document.name }}
@@ -50,7 +50,7 @@
         id="genderInput"
         class="form-select"
         aria-label="Selecione genero"
-        formControlName="gender"
+        formControlName="genderId"
       >
         <option [value]="item.id" *ngFor="let item of genders">
           {{ item.name }}

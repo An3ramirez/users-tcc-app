@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
-import { UserModel } from 'src/app/domain/models/user.model';
+import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
 
 interface subTypesI {
   id: number;
@@ -13,7 +13,7 @@ interface subTypesI {
   styleUrls: ['./user-form.component.scss'],
 })
 export class UserFormComponent {
-  @Input() userEdit?: UserModel;
+  @Input() userEdit?: UserEntity;
   @Output() submitForm = new EventEmitter();
 
   userForm: FormGroup;
@@ -42,9 +42,9 @@ export class UserFormComponent {
     this.userForm = this.fb.group({
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
-      documentType: [null, Validators.required],
+      documentTypeId: [null, Validators.required],
       documentNumber: [null, Validators.required],
-      gender: [null, Validators.required],
+      genderId: [null, Validators.required],
     });
   }
 
@@ -62,8 +62,8 @@ export class UserFormComponent {
       return;
     }
     const user = this.userForm.value;
-    user.documentType = parseInt(user.documentType);
-    user.gender = parseInt(user.gender);
+    user.documentTypeId = parseInt(user.documentTypeId);
+    user.genderId = parseInt(user.genderId);
 
     this.submitForm.emit(user);
     this.userForm.reset();

@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
+import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
 import { UserModel } from 'src/app/domain/models/user.model';
 import { ConfirmationModalComponent } from 'src/app/presentation/shared/confirmation-modal/confirmation-modal.component';
 
@@ -13,7 +14,7 @@ export class UserListComponent {
   @Output() onEditEvent = new EventEmitter<number>();
   @Output() onCreateEvent = new EventEmitter<number>();
 
-  @Input() users: UserModel[] = [];
+  @Input() users: UserEntity[] = [];
   @Input() loaderEdit: boolean = false;
   @Input() loaderDelete: boolean = false;
   @Input() loaderCreate: boolean = false;

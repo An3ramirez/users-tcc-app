@@ -7,20 +7,22 @@ export class UserImplementationRepositoryMapper extends Mapper<
 > {
   mapFrom(param: UserEntity): UserModel {
     return {
-      firstName: param.firstName,
-      lastName: param.lastName,
-      documentType: param.documentType,
-      documentNumber: param.documentNumber,
-      gender: param.gender,
+      id: param.id,
+      first_name: param.firstName,
+      last_name: param.lastName,
+      document_type_id: param.documentTypeId,
+      document_number: param.documentNumber,
+      gender_id: param.genderId,
     };
   }
   mapTo(param: UserModel): UserEntity {
     return {
-      firstName: param.firstName,
-      lastName: param.lastName,
-      documentType: param.documentType,
-      documentNumber: param.documentNumber,
-      gender: param.gender,
+      id: param.id,
+      firstName: param.first_name,
+      lastName: param.last_name,
+      documentTypeId: param.document_type_id,
+      documentNumber: param.document_number,
+      genderId: param.gender_id,
     };
   }
 }

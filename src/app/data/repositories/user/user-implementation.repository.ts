@@ -1,5 +1,5 @@
 import { Observable, of } from 'rxjs';
-import { map, delay } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { UserEntity } from './entities/user-entity';
@@ -19,16 +19,26 @@ export class UserImplementationRepository extends UserRepository {
   constructor(private http: HttpClient) {
     super();
   }
-  create(params: UserEntity): Observable<UserModel> {
-    return this.http.post<UserEntity>(this.domainApi + '/user', params);
+  create(params: UserModel): Observable<UserEntity> {
+    return this.http
+      .post<UserModel>(this.domainApi + '/user', params)
+      .pipe(map(this.userMapper.mapTo));
   }
 
-  findAll(): Observable<UserModel[]> {
-    return this.http.get<UserModel[]>(this.domainApi + '/user');
+  findAll(): Observable<UserEntity[]> {
+    return this.http.get<UserModel[]>(this.domainApi + '/user').pipe(
+      map((response: UserModel[]) => {
+        return response.map((userModel: UserModel) =>
+          this.userMapper.mapTo(userModel)
+        );
+      })
+    );
   }
 
-  edit(id: number, params: UserEntity): Observable<UserModel> {
-    return this.http.put<UserModel>(this.domainApi + '/user/' + id, params);
+  edit(id: number, params: UserModel): Observable<UserEntity> {
+    return this.http
+      .put<UserModel>(this.domainApi + '/user/' + id, params)
+      .pipe(map(this.userMapper.mapTo));
   }
 
   delete(id: number): Observable<void> {

@@ -1,7 +1,8 @@
 export interface UserEntity {
+  id: number;
   firstName: string;
   lastName: string;
-  documentType: number;
+  documentTypeId: number;
   documentNumber: number;
-  gender: number;
+  genderId: number;
 }

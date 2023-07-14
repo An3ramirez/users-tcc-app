@@ -8,6 +8,7 @@ import {
   UserCreateUseCase,
   UserEditUseCase,
 } from 'src/app/domain/usecases';
+import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
 
 declare var window: any;
 
@@ -17,11 +18,11 @@ declare var window: any;
   styleUrls: ['./container.component.scss'],
 })
 export class ContainerComponent {
-  userEdit?: UserModel;
+  userEdit?: UserEntity;
   formModalRef: any;
   userMapper = new UserImplementationRepositoryMapper();
 
-  users: UserModel[] = [];
+  users: UserEntity[] = [];
   loader = {
     create: false,
     edit: false,
@@ -57,7 +58,7 @@ export class ContainerComponent {
     });
   }
 
-  savedForm(user: UserModel) {
+  savedForm(user: UserEntity) {
     console.log('saved form: ', user);
 
     this.formModalRef.hide();
@@ -68,9 +69,9 @@ export class ContainerComponent {
     }
   }
 
-  handleCreateUser(user: UserModel) {
+  handleCreateUser(user: UserEntity) {
     this.loader.create = true;
-    const newUser = this.userMapper.mapTo(user);
+    const newUser = this.userMapper.mapFrom(user);
 
     this.userCreateUseCase.execute(newUser).subscribe({
       next: (response) => {
@@ -86,9 +87,9 @@ export class ContainerComponent {
     });
   }
 
-  handleUpdateUser(user: UserModel) {
+  handleUpdateUser(user: UserEntity) {
     this.loader.edit = true;
-    const newUser = this.userMapper.mapTo(user);
+    const newUser = this.userMapper.mapFrom(user);
     let id = this.userEdit?.id || 0;
     this.userEdit = undefined;
 
