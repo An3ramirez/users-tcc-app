@@ -3,6 +3,7 @@ import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
 import { UserModel } from 'src/app/domain/models/user.model';
 import { ConfirmationModalComponent } from 'src/app/presentation/shared/confirmation-modal/confirmation-modal.component';
+import { subTypesI } from '../../interfaces/sub-types';
 
 @Component({
   selector: 'app-user-list',
@@ -15,6 +16,8 @@ export class UserListComponent {
   @Output() onCreateEvent = new EventEmitter<number>();
 
   @Input() users: UserEntity[] = [];
+  @Input() documentTypes: subTypesI[] = [];
+  @Input() genders: subTypesI[] = [];
   @Input() loaderEdit: boolean = false;
   @Input() loaderDelete: boolean = false;
   @Input() loaderCreate: boolean = false;
@@ -41,5 +44,15 @@ export class UserListComponent {
 
   onEdit(id: number) {
     this.onEditEvent.emit(id);
+  }
+
+  nameDocumentType(id: number): string {
+    const documentType = this.documentTypes.find((item) => item.id == id);
+    return documentType?.name ?? id.toString();
+  }
+
+  nameGender(id: number): string {
+    const gender = this.genders.find((item) => item.id == id);
+    return gender?.name ?? id.toString();
   }
 }
