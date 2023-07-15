@@ -34,6 +34,8 @@
       <div class="modal-body">
         <app-user-form
           [userEdit]="userEdit"
+          [documentTypes]="documentTypes"
+          [genders]="genders"
           (submitForm)="savedForm($event)"
         ></app-user-form>
       </div>

@@ -1,11 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
 import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
-
-interface subTypesI {
-  id: number;
-  name: string;
-}
+import { subTypesI } from '../../interfaces/sub-types';
 
 @Component({
   selector: 'app-user-form',
@@ -14,29 +10,11 @@ interface subTypesI {
 })
 export class UserFormComponent {
   @Input() userEdit?: UserEntity;
+  @Input() documentTypes: subTypesI[] = [];
+  @Input() genders: subTypesI[] = [];
   @Output() submitForm = new EventEmitter();
 
   userForm: FormGroup;
-  documentTypes: subTypesI[] = [
-    {
-      id: 1,
-      name: 'Cedula',
-    },
-    {
-      id: 2,
-      name: 'Passaporte',
-    },
-  ];
-  genders: subTypesI[] = [
-    {
-      id: 1,
-      name: 'Mujer',
-    },
-    {
-      id: 2,
-      name: 'Hombre',
-    },
-  ];
 
   constructor(private fb: FormBuilder) {
     this.userForm = this.fb.group({

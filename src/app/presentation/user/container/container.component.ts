@@ -9,6 +9,7 @@ import {
   UserEditUseCase,
 } from 'src/app/domain/usecases';
 import { UserEntity } from 'src/app/data/repositories/user/entities/user-entity';
+import { subTypesI } from '../../interfaces/sub-types';
 
 declare var window: any;
 
@@ -28,6 +29,35 @@ export class ContainerComponent {
     edit: false,
     delete: false,
   };
+
+  documentTypes: subTypesI[] = [
+    {
+      id: 1,
+      name: 'Cédula de cuidadania',
+    },
+    {
+      id: 2,
+      name: 'Nit',
+    },
+    {
+      id: 3,
+      name: 'Cédula Extranjeria',
+    },
+  ];
+  genders: subTypesI[] = [
+    {
+      id: 1,
+      name: 'Mujer',
+    },
+    {
+      id: 2,
+      name: 'Hombre',
+    },
+    {
+      id: 3,
+      name: 'No definido',
+    },
+  ];
 
   constructor(
     private toastr: ToastrService,
